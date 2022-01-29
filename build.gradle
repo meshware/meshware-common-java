@@ -1,0 +1,91 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+    id 'signing'
+}
+
+group 'io.meshware'
+version '0.0.1'
+description "General component module"
+
+defaultTasks 'build'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+    implementation 'io.joyrpc:joyrpc-extension-core:1.4.7-RELEASE'
+    implementation 'org.slf4j:slf4j-api:1.7.33'
+    implementation 'org.projectlombok:lombok:1.18.22'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    options.addStringOption("charset", "UTF-8")
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'common'
+            from components.java
+            pom {
+                name = 'meshware-common'
+                description = 'General component module'
+                url = 'https://github.com/meshware/meshware-common-java'
+                licenses {
+                    license {
+                        name = 'Apache-2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'chenzhiguo'
+                        name = 'Zhiguo.Chen'
+                        email = 'chenzhiguo@live.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/meshware/meshware-common-java.git'
+                    developerConnection = 'scm:git:ssh://github.com/meshware/meshware-common-java.git'
+                    url = 'https://github.com/meshware/meshware-common-java'
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            name = "ossrh"
+            if (project.version.toString().endsWith("-SNAPSHOT")) {
+                url = "https://s01.oss.sonatype.org/content/repositories/snapshots"
+            } else {
+                url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            }
+            credentials {
+                username = System.getenv("MAVEN_USERNAME")
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+    sign configurations.archives
+    sign publishing.publications.mavenJava
+}
