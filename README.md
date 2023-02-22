@@ -1,5 +1,5 @@
 # meshware-common
-[![Build](https://github.com/meshware/meshware-common-java/actions/workflows/build.yml/badge.svg)](https://github.com/meshware/meshware-common-java/actions/workflows/build.yml)
+[![Build](https://github.com/meshware/meshware-common-java/actions/workflows/gradle.yml/badge.svg)](https://github.com/meshware/meshware-common-java/actions/workflows/gradle.yml)
 ![License](https://img.shields.io/github/license/meshware/meshware-common-java.svg)
 [![Maven Central](https://img.shields.io/maven-central/v/io.meshware/common.svg?label=maven%20central)](https://search.maven.org/search?q=g:io.meshware)
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/meshware/meshware-common-java.svg)](http://isitmaintained.com/project/meshware/meshware-common-java "Percentage of issues still open")
