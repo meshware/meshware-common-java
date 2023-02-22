@@ -86,5 +86,7 @@ public abstract class ScheduleTask implements TimeTask {
      *
      * @return bool
      */
-    public abstract boolean isAsync();
+    public boolean isAsync() {
+        return false;
+    }
 }
