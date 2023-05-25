@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'io.meshware'
-version '0.0.1'
+version '0.0.2-SNAPSHOT'
 description "General component module"
 
 defaultTasks 'build'
@@ -84,7 +84,9 @@ publishing {
     }
 }
 
+ext.isReleaseVersion = !version.endsWith("SNAPSHOT")
 signing {
+    required { isReleaseVersion && gradle.taskGraph.hasTask("publish") }
     useGpgCmd()
     sign configurations.archives
     sign publishing.publications.mavenJava

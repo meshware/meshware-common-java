@@ -18,6 +18,7 @@ package io.meshware.common.timer;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 /**
@@ -52,7 +53,7 @@ public abstract class ScheduleTask implements TimeTask {
         if (running) {
             try {
                 CompletableFuture<Void> completableFuture = execute();
-                if (!isAsync()) {
+                if (!isAsync() && Objects.nonNull(completableFuture)) {
                     completableFuture.get();
                 }
             } catch (Exception e) {
