@@ -29,7 +29,7 @@ public class RetryNTimes extends AbstractRetryPolicy {
 
     public RetryNTimes(int maxRetried, int sleepTime, TimeUnit unit) {
         super(maxRetried);
-        this.sleepMilliseconds = unit.convert(sleepTime, TimeUnit.MILLISECONDS);
+        this.sleepMilliseconds = TimeUnit.MILLISECONDS.convert(sleepTime, unit);
     }
 
     @Override

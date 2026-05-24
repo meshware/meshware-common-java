@@ -164,10 +164,10 @@ public class Timer {
                     }
                 } catch (InterruptedException e) {
                     log.error(e.getMessage(), e);
+                    Thread.currentThread().interrupt();
                     break;
                 } catch (Exception e) {
                     log.error(e.getMessage(), e);
-                    throw e;
                 }
             }
         });
@@ -347,7 +347,7 @@ public class Timer {
         /**
          * 时间槽
          */
-        protected TimeWheel.Slot slot;
+        protected volatile TimeWheel.Slot slot;
 
         /**
          * 下一个节点

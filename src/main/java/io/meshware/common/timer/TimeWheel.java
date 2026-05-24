@@ -150,11 +150,10 @@ public class TimeWheel {
      */
     public void advance(final long timestamp) {
         if (timestamp >= now + tickTime) {
-            now = timestamp - (timestamp % tickTime);
-            index++;
-            if (index >= ticks) {
-                index = 0;
-            }
+            long newNow = timestamp - (timestamp % tickTime);
+            long elapsed = (newNow - now) / tickTime;
+            now = newNow;
+            index = (int) ((index + elapsed) % ticks);
             if (next != null) {
                 // 推进下层时间轮时间
                 next.advance(timestamp);
@@ -196,7 +195,7 @@ public class TimeWheel {
          * @param expire 新的过期时间
          * @return 位置
          */
-        protected int add(final Timer.Task task, final long expire) {
+        protected synchronized int add(final Timer.Task task, final long expire) {
             task.slot = this;
             Timer.Task tail = root.pre;
             task.next = root;
@@ -215,7 +214,10 @@ public class TimeWheel {
          *
          * @param task task
          */
-        protected void remove(final Timer.Task task) {
+        protected synchronized void remove(final Timer.Task task) {
+            if (task.next == null || task.pre == null) {
+                return;
+            }
             task.next.pre = task.pre;
             task.pre.next = task.next;
             task.slot = null;
@@ -228,14 +230,19 @@ public class TimeWheel {
          *
          * @param consumer 消费者
          */
-        protected void flush(final Consumer<Timer.Task> consumer) {
+        protected synchronized void flush(final Consumer<Timer.Task> consumer) {
             List<Timer.Task> ts = new LinkedList<>();
             Timer.Task task = root.next;
             while (task != root) {
-                remove(task);
+                Timer.Task next = task.next;
+                task.next = null;
+                task.pre = null;
+                task.slot = null;
                 ts.add(task);
-                task = root.next;
+                task = next;
             }
+            root.next = root;
+            root.pre = root;
             expiration = -1L;
             ts.forEach(consumer);
         }
@@ -248,7 +255,7 @@ public class TimeWheel {
 
         @Override
         public int compareTo(final Delayed o) {
-            return o instanceof Slot ? Long.compare(expiration, ((Slot) o).expiration) : 0;
+            return Long.compare(this.getDelay(TimeUnit.MILLISECONDS), o.getDelay(TimeUnit.MILLISECONDS));
         }
 
     }

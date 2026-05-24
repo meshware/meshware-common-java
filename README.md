@@ -5,26 +5,54 @@
 [![Percentage of issues still open](http://isitmaintained.com/badge/open/meshware/meshware-common-java.svg)](http://isitmaintained.com/project/meshware/meshware-common-java "Percentage of issues still open")
 
 ## Overview
-General component module, reference from `joyrpc`.
 
-## How to use
+A general-purpose common utility library for the Meshware ecosystem, referenced from [joyrpc](https://github.com/joyrpc/joyrpc). Provides reusable infrastructure components for building high-performance distributed systems.
+
+### Modules
+
+| Module | Package | Description |
+|--------|---------|-------------|
+| **Time Wheel** | `io.meshware.common.timer` | Hierarchical hash-wheel timer with `DelayQueue`-based slot expiration. Supports one-shot delay and periodic scheduling. |
+| **Event Bus** | `io.meshware.common.event` | SPI-based event bus using joyrpc extension mechanism. Supports publish/subscribe with per-group dispatcher threads. |
+| **Concurrency** | `io.meshware.common.concurrent` | Daemon thread lifecycle management, named thread factory, timed waiter abstractions, and executor service factory. |
+| **Retry** | `io.meshware.common.retry` | Pluggable retry policy framework with configurable retry count and sleep interval. |
+| **Utilities** | `io.meshware.common.util` | Cached reflection (`ClassUtils`), `CompletableFuture` helpers (`Futures`), safe close/destroy, shutdown hooks, resource loading. |
+| **Entity** | `io.meshware.common.entity` | Async result wrapper and generic response entity. |
+| **Exception** | `io.meshware.common.exception` | Domain exceptions: creation, reflection, method overload, and system-level errors. |
+
+## How to Use
+
 ### Requirements
-Compile requirement: JDK 8+ and Maven 3.2.5+ .
 
-### Maven dependency
+- JDK 8+
+- Gradle 7+ (project uses Gradle Wrapper)
+
+### Maven Dependency
+
 ```xml
 <!-- https://mvnrepository.com/artifact/io.meshware/common -->
 <dependency>
     <groupId>io.meshware</groupId>
     <artifactId>common</artifactId>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
 </dependency>
 ```
-### Gradle dependency
+
+### Gradle Dependency
+
 ```groovy
 // https://mvnrepository.com/artifact/io.meshware/common
-implementation group: 'io.meshware', name: 'common', version: '0.0.1'
+implementation 'io.meshware:common:0.0.2'
+```
+
+## Build
+
+```bash
+./gradlew build          # compile + test + package
+./gradlew test           # run tests only
+./gradlew javadocJar     # generate javadoc jar
 ```
 
 ## License
-LocalCache is licensed under the [Apache License 2.0](./LICENSE).
+
+meshware-common is licensed under the [Apache License 2.0](./LICENSE).

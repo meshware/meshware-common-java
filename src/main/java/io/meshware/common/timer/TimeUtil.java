@@ -75,8 +75,6 @@ public final class TimeUtil {
     }
 
     public static long microTime() {
-        long microTime = now() * 1000;
-        long nanoTime = System.nanoTime();
-        return microTime + (nanoTime % 1000000) / 1000;
+        return System.currentTimeMillis() * 1000;
     }
 }

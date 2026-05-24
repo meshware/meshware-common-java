@@ -173,14 +173,17 @@ public class Futures {
                 try {
                     latch.await(100, TimeUnit.MILLISECONDS);
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                     future.completeExceptionally(e);
+                    return;
                 }
             }
             //超时判断
             if (!future.isDone()) {
                 future.completeExceptionally(new TimeoutException());
             }
-        }, "offline");
+        }, "future-timeout");
+        thread.setDaemon(true);
         thread.start();
         future.whenComplete((v, t) -> latch.countDown());
         return future;

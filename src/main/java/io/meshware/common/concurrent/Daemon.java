@@ -298,7 +298,7 @@ public class Daemon {
                 fault = val;
             }
             if (delay == null) {
-                delay = fault;
+                delay = val;
             }
             return this;
         }
@@ -319,7 +319,7 @@ public class Daemon {
         }
 
         public Daemon build() {
-            return callable != null ? new Daemon(name, prepare, callable, delay == null ? 0 : delay, error, fault == null ? 0 : delay, condition, waiter) :
+            return callable != null ? new Daemon(name, prepare, callable, delay == null ? 0 : delay, error, fault == null ? 0 : fault, condition, waiter) :
                     new Daemon(name, prepare, runnable, interval == null ? 0 : interval, delay == null ? 0 : delay, error, fault == null ? 0 : fault, condition, waiter);
         }
 

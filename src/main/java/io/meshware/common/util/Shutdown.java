@@ -52,7 +52,7 @@ public class Shutdown {
     /**
      * 是否在关闭
      */
-    protected boolean shutdown;
+    protected volatile boolean shutdown;
 
     /**
      * 构造函数

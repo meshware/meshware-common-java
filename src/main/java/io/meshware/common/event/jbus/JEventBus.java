@@ -114,7 +114,7 @@ public class JEventBus implements EventBus {
                 // 执行处理器待优化，采用Map结构降低查找复杂度
                 if (recipient != null) {
                     target = recipient.getTarget();
-                    if (target != null) {
+                    if (target != null && target instanceof EventHandler) {
                         EventHandler<E> handler = handlerMap.get(target);
                         if (null != handler) {
                             handler.handle(event);
@@ -144,18 +144,24 @@ public class JEventBus implements EventBus {
         public void close() {
             //移除，防止保留大量的无用的发布器
             if (group.remove(name) != null) {
+                Dispatcher<E> d = polling;
                 polling = null;
+                if (d != null && group.publishers.isEmpty()) {
+                    d.stop();
+                }
             }
         }
 
         @Override
         public boolean offer(final E event) {
-            return event != null && polling != null && polling.offer(new Message<>(event, consumer));
+            Dispatcher<E> d = polling;
+            return event != null && d != null && d.offer(new Message<>(event, consumer));
         }
 
         @Override
         public boolean offer(final E event, final long timeout, final TimeUnit timeUnit) {
-            return event != null && polling != null && polling.offer(new Message<>(event, consumer), timeout, timeUnit);
+            Dispatcher<E> d = polling;
+            return event != null && d != null && d.offer(new Message<>(event, consumer), timeout, timeUnit);
         }
     }
 
@@ -226,7 +232,8 @@ public class JEventBus implements EventBus {
             if (message != null) {
                 try {
                     return queue.offer(message, timeout, timeUnit == null ? TimeUnit.MILLISECONDS : timeUnit);
-                } catch (InterruptedException ignored) {
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
             return false;
@@ -251,7 +258,8 @@ public class JEventBus implements EventBus {
                 if (message != null) {
                     message.publish();
                 }
-            } catch (InterruptedException ignored) {
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
 

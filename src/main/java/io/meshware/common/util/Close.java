@@ -184,7 +184,8 @@ public class Close {
                     if (!executor.awaitTermination(timeout, TimeUnit.MILLISECONDS)) {
                         executor.shutdownNow();
                     }
-                } catch (InterruptedException ignored) {
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }

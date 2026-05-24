@@ -1627,7 +1627,10 @@ public class ClassUtils {
          * @return collection
          */
         public Collection<Method> getMethods() {
-            return metas.keySet();
+            if (metas != null) {
+                return metas.keySet();
+            }
+            return Collections.singletonList(first.method);
         }
 
         /**

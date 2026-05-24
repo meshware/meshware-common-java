@@ -59,8 +59,10 @@ public abstract class ScheduleTask implements TimeTask {
             } catch (Exception e) {
                 log.error("Task execute error! message={}", e.getMessage(), e);
             }
-            time = TimeUtil.now() + getIntervalInMs();
-            currentTimer.add(this);
+            if (running) {
+                time = TimeUtil.now() + getIntervalInMs();
+                currentTimer.add(this);
+            }
         }
     }
 
